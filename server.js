@@ -1,8 +1,12 @@
 'use strict';
 
 const Hapi=require('hapi');
-const server = new Hapi.Server(~~process.env.PORT || 8000, '0.0.0.0');
 
+// Create a server with a host and port
+const server = Hapi.server({
+    host:'0.0.0.0',
+    port: process.env.PORT|| 8000
+});
 
 // Add the route
 server.route({
@@ -21,6 +25,18 @@ server.route({
     }
 });
 
-server.start(function () {
-    console.log('Server started at [' + server.info.uri + ']');
-});
+// Start the server
+const start =  async function() {
+
+    try {
+        await server.start();
+    }
+    catch (err) {
+        console.log(err);
+        process.exit(1);
+    }
+
+    console.log('Server running at:', server.info.uri);
+};
+
+start();
